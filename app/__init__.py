@@ -6,12 +6,13 @@ from flask.ext.runner import Manager
 from inflection import singularize
 
 flask = Flask(__name__, template_folder=path.join(getcwd(), __name__, 'views'))
+flask.config.from_object('config')
 
 manager = Manager(flask)
 
 
 def register_blueprints(flask, package):
-    package_dir = path.join(getcwd(), __name__, package)
+	package_dir = path.join(getcwd(), __name__, package)
 	module_suffix = '_' + singularize(package) + '.py'
 
 	module_names = [sub('\.py', '', c)
