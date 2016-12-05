@@ -12,3 +12,5 @@ def get_env_variable(var_name, default=-1):
 SPOTIFY_APP_ID = get_env_variable("DATASOUND_SPOTIFY_APP_ID")
 SPOTIFY_APP_SECRET = get_env_variable("DATASOUND_SPOTIFY_APP_SECRET")
 SECRET_KEY = get_env_variable("DATASOUND_SECRET_KEY")
+
+DEBUG=True
