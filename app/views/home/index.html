@@ -2,11 +2,13 @@
 
 {% block content %}
 
-	Hello buddy
-
-	<form action="/login" method="post">
-	    <input type="submit" value="Login with spotify" 
-	        name="Submit" id="login_submit" />
-	</form>
+	<link rel="stylesheet" type="text/css" href="static/home.css" type="text/css">
+	
+	<div id="initBoard">
+		<form action="/login/" method="post">
+		    <input type="submit" value="Login with spotify" 
+		        name="Submit" id="login_submit" />
+		</form>
+	</div>
 
 {% endblock content %}
