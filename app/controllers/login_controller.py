@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, url_for, request, session, redirect, jsonify
 from flask_oauthlib.client import OAuth, OAuthException
 from config import SPOTIFY_APP_ID, SPOTIFY_APP_SECRET, SECRET_KEY
 
@@ -19,17 +19,17 @@ spotify = oauth.remote_app('spotify',
 )
 
 
-@blueprint.route("/")
+@blueprint.route('/')
 def login():
 	callback = url_for(
-		'spotify_authorized',
+		'login_controller.spotify_authorized',
 		next= request.referrer or None,
 		_external=True
 	)
 	return spotify.authorize(callback=callback)
 
 
-@blueprint.route("/authorized")
+@blueprint.route('/authorized')
 def spotify_authorized():
 	resp = spotify.authorized_response()
 	if resp is None:
@@ -37,13 +37,22 @@ def spotify_authorized():
 			request.args['error_reason'],
 			request.args['error_description']
 		)
-	if isinstance(resp, OAuthException):
-		return 'Access denied: {0}'.format(resp.message)
 
 	session['oauth_token'] = (resp['access_token'], '')
 	me = spotify.get('https://api.spotify.com/v1/me')
 
-	return redirect(url_for('profile', user=me.data, oauth_token=resp['access_token']))
+	user = []
+	user.append({
+		'email': me.data['email'],
+		'country': me.data['country'],
+		'followers': me.data['followers'],
+		'id': me.data['id'],
+		'type': me.data['type'],
+		'product': me.data['product'],
+		'token': session['oauth_token']
+	})
+
+	return redirect(url_for('profile_controller.user_profile', user=jsonify(user))) 
 
 
 @spotify.tokengetter
