@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, url_for, request, session, redirect, jsonify
+from flask import Blueprint, render_template, url_for, request, session, redirect, json
 from flask_oauthlib.client import OAuth, OAuthException
 from config import SPOTIFY_APP_ID, SPOTIFY_APP_SECRET, SECRET_KEY
 
@@ -23,7 +23,6 @@ spotify = oauth.remote_app('spotify',
 def login():
 	callback = url_for(
 		'login_controller.spotify_authorized',
-		next= request.referrer or None,
 		_external=True
 	)
 	return spotify.authorize(callback=callback)
@@ -41,8 +40,8 @@ def spotify_authorized():
 	session['oauth_token'] = (resp['access_token'], '')
 	me = spotify.get('https://api.spotify.com/v1/me')
 
-	user = []
-	user.append({
+	user = {
+		'display_name': me.data['display_name'],
 		'email': me.data['email'],
 		'country': me.data['country'],
 		'followers': me.data['followers'],
@@ -50,9 +49,11 @@ def spotify_authorized():
 		'type': me.data['type'],
 		'product': me.data['product'],
 		'token': session['oauth_token']
-	})
+	}
 
-	return redirect(url_for('profile_controller.user_profile', user=jsonify(user))) 
+	userJson = json.dumps(user)
+
+	return redirect(url_for('profile_controller.user_profile', user=userJson))
 
 
 @spotify.tokengetter
