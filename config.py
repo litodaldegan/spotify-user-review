@@ -27,7 +27,7 @@ class Production(Config):
 
 class Development(Config):
     DEBUG = True
-    SQLALCHEMY_DATABASE_URI = 'postgresql:///spotify-user-data'
+    SQLALCHEMY_DATABASE_URI = 'postgresql:///spotify_user_data'
 
 
 class Testing(Config):
