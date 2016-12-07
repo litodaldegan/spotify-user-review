@@ -53,7 +53,7 @@ def spotify_authorized():
 
 	userJson = json.dumps(user)
 
-	return redirect(url_for('profile_controller.user_profile', user=userJson))
+	return redirect(url_for('profile_controller.user_profile', user=userJson, token=resp['access_token']))
 
 
 @spotify.tokengetter
