@@ -1,16 +1,16 @@
 from flask import Blueprint, render_template, url_for, request, session, redirect, json
 from flask_oauthlib.client import OAuth, OAuthException
-from config import SPOTIFY_APP_ID, SPOTIFY_APP_SECRET, SECRET_KEY
+from config import Config
 
 blueprint = Blueprint('login_controller', __name__, url_prefix='/login')
 
-blueprint.secret_key = SECRET_KEY
+blueprint.secret_key = Config.SECRET_KEY
 
 oauth = OAuth(blueprint)
 
 spotify = oauth.remote_app('spotify',
-	consumer_key=SPOTIFY_APP_ID,
-	consumer_secret=SPOTIFY_APP_SECRET,
+	consumer_key=Config.SPOTIFY_APP_ID,
+	consumer_secret=Config.SPOTIFY_APP_SECRET,
 	request_token_params={'scope': 'playlist-read-private'},
 	base_url='https://accounts.spotify.com',
 	request_token_url=None,
@@ -44,7 +44,7 @@ def spotify_authorized():
 		'display_name': me.data['display_name'],
 		'email': me.data['email'],
 		'country': me.data['country'],
-		'followers': me.data['followers'],
+		'followers': me.data['followers']['total'],
 		'id': me.data['id'],
 		'type': me.data['type'],
 		'product': me.data['product'],
