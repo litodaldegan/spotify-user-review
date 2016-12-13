@@ -1,4 +1,4 @@
-from sqlalchemy import Column,  Integer, String, Boolean,ForeignKey
+from sqlalchemy import Column,  Integer, String
 from app import db
 
 
@@ -22,16 +22,3 @@ class User(db.Model):
 		yield 'country', self.country
 		yield 'followers', self.followers
 		yield 'product', self.product
-
-
-class PlayList(db.Model):
-	__tablename__ = 'playlist'
-
-	id = Column(Integer, primary_key=True)
-	user = Column('user_id', Integer, ForeignKey("user.id"), nullable=False)
-	playlist_id = Column(String)
-	owner = Column(String)
-	name = Column(String)
-	url = Column(String)
-	image = Column(String)
-	public = Column(Boolean)
