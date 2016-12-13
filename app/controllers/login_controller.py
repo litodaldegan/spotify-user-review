@@ -19,7 +19,7 @@ spotify = oauth.remote_app('spotify',
 )
 
 
-@blueprint.route('/')
+@blueprint.route('')
 def login():
 	callback = url_for(
 		'login_controller.spotify_authorized',
