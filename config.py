@@ -33,4 +33,4 @@ class Development(Config):
 class Testing(Config):
     DEBUG = True
     TESTING = True
-    SQLALCHEMY_DATABASE_URI = 'sqlite://'
+    SQLALCHEMY_DATABASE_URI = 'postgresql:///spotify_user_data'
