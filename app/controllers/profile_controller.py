@@ -2,8 +2,10 @@ from flask import (
 	Blueprint, render_template, json, flash, redirect, url_for
 )
 import requests
+from sqlalchemy.sql import func
 from app.models.user import User
 from app.models.playlist import PlayList
+from app.models.artist import Artist
 from app import models
 from app import db
 from config import Config
@@ -26,7 +28,7 @@ def register(user_data):
 
 		# Checking if the user is registered
 		if u.spotify_id == user_data['id']:
-			flash ("Welcome back" + user_data['display_name'])
+			flash ("Welcome back " + user_data['display_name'])
 
 			return u.id
 
@@ -83,8 +85,8 @@ def get_playlists(user_id, access_token, db_id):
 	return playlistsIDs
 
 
-def get_tracks(user_id, access_token, playlistsIDs):
-	artistsIDS = []
+def get_artists_id(access_token, playlistsIDs):
+	artistsIDs = []
 
 	for playlistsID in playlistsIDs:
 		playlist = PlayList.query.get(playlistsID)
@@ -97,26 +99,78 @@ def get_tracks(user_id, access_token, playlistsIDs):
 		tracks = response.json()	
 
 		for track in tracks["tracks"]["items"]:
-			artistsIDS.append(track["track"]["album"]["artists"][0]["id"])
-
-		import pdb; pdb.set_trace()
+			artistsIDs.append(track["track"]["album"]["artists"][0]["id"])
 	
-	return artistsIDS
+	return list(set(artistsIDs))
 
-	# tracks["tracks"]["items"][0]["track"]["album"]["artists"][0]["id"]
+
+def get_artists(UserID, access_token, artistsIDs):
+	nArtists = len(artistsIDs)
+
+	# Removing old artists associeted with user
+	db.session.query(Artist).filter_by(user=UserID).delete()
+	db.session.commit()
+
+	# while nArtists > 0:
+	headers = {"Authorization": "Bearer " + access_token}
+	
+	for artist in artists:
+		# Max request size
+		if (nArtists > 50):
+			response = requests.get("https://api.spotify.com/v1/artists?ids=" +
+				str(",".join(artistsIDs[0:50])), headers=headers)
+				
+			nArtists -= 50;
+
+		else:
+			response = requests.get("https://api.spotify.com/v1/artists?ids=" +
+				str(artistsIDs), headers=headers)
+
+		artists = response.json()
+
+		# Taking the artist data and saving
+		for artist in artists['artists']:
+			artistDB = Artist()
+			artistDB.user = UserID
+			artistDB.name = artist['name']
+			artistDB.spotifyotify_id = artist['id']
+			artistDB.image = artist['images'][0]['url']
+			artistDB.url = artist['external_urls']['spotify']
+			artistDB.popularity = artist['popularity']
+			artistDB.genres = artist['genres']
+
+			db.session.add(artistDB)
+			db.session.commit()
+
+
+def user_pontuation(UserID):
+	artists = db.session.query(Artist).filter_by(user=UserID).all()
+	pontuation = 0
+
+	for artist in artists:
+		pontuation += artist.popularity
+
+	pontuation /= len(artists)
+
+	return pontuation
 
 
 @blueprint.route('/<user>/<token>')
 def user_profile(user, token):
 	user_data = json.loads(user)
 
-	db_id = register(user_data)
+	# UserID = register(user_data)
 
-	pls_ids = get_playlists(user_data['id'], token, db_id)
+	# playlistsIDs = get_playlists(user_data['id'], token, UserID)
 
-	get_tracks(user_data['id'], token, pls_ids)
+	# artistsIDs = get_artists_id(token, playlistsIDs)
 
-	return render_template('profile/index.html', user=user_data)
+	# get_artists (UserID, token, artistsIDs)
+
+	# user_pontuation(user_data['id'])
+	pontuation = user_pontuation(2)
+
+	return render_template('profile/index.html', user=user_data, pontuation=pontuation)
 
 
 @blueprint.route('/charts')
