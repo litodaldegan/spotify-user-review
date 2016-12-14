@@ -2,7 +2,20 @@
 
 {% block content %}
 
-<link rel="stylesheet" type="text/css" href="../static/profile.css" type="text/css">
+<div class="container" style="min-height:100% width:80%">
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-warning alert-dismissible" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+        {{message}}
+      </div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
+<link type="text/css" rel="stylesheet" media="all" href="/static/profile.css" />
+
 <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
 <div class="container">
 	<div class="row">
@@ -23,6 +36,7 @@
                     <div class="desc">Country: {{ user.country }}</div>
                     <div class="desc">Followers: {{ user.followers }}</div>
                     <div class="desc">Type: {{ user.type }}</div>
+                    <div class="desc">Pontuação: {{ pontuation }}</div>
                 </div>
             </div>
 
