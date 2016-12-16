@@ -14,6 +14,9 @@ class PlayList(db.Model):
 	image = Column(String)
 	public = Column(Boolean)
 
+	def __repr__(self):
+		return '<Name: %s User: %s>' % (self.name, self.user)
+
 	def __iter__(self):
 		yield 'playlist_id', self.playlist_id
 		yield 'owner', self.owner
