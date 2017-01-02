@@ -198,7 +198,7 @@ def get_styles(user_id):
 
 @blueprint.route('/artists/top10/<user_id>')
 def get_top10(user_id):
-	artists = [dict(i) for i in db.session.query(Artist).filter_by(user=user_id).order_by(desc("popularity")).limit(10).all()]
+	artists = [dict(i) for i in db.session.query(Artist).filter_by(user=user_id).order_by(desc("popularity")).limit(15).all()]
 
 	return jsonify(json_data=artists), 200
 
