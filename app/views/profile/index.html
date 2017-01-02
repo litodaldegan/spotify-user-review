@@ -2,7 +2,7 @@
 
 {% block content %}
 
-<div class="container" style="min-height:100% width:80%">
+<!-- <div class="container" style="min-height:100% width:80%">
 {% with messages = get_flashed_messages() %}
   {% if messages %}
     {% for message in messages %}
@@ -12,13 +12,14 @@
       </div>
     {% endfor %}
   {% endif %}
-{% endwith %}
+{% endwith %} -->
 
 <link type="text/css" rel="stylesheet" media="all" href="/static/css/profile.css" />
 <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
 
 <script type="text/javascript" src="/static/js/playlists_painel.js"></script>
-<script type="text/javascript" src="/static/js/user_style.js"></script>
+<script type="text/javascript" src="/static/js/user_style_visu.js"></script>
+<script type="text/javascript" src="/static/js/top_artists_visu.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3plus/1.9.8/d3plus.full.min.js"></script>
 
 
@@ -37,39 +38,55 @@
                     <div class="title">
                         <a target="_blank" href=""> {{ user.display_name if none else user.id }} </a>
                     </div>
-                    <div class="desc">Email: {{ user.email }}</div>
                     <div class="desc">Country: {{ user.country }}</div>
                     <div class="desc">Followers: {{ user.followers }}</div>
-                    <div class="desc">Type: {{ user.type }}</div>
-                    <div class="desc">Pontuação: {{ pontuation }}</div>
+                    <div class="desc">Pontuação: {{ score }}</div>
                 </div>
             </div>
 
         </div>
 
         <section class="container-fluid playlists-wrapper">
-                <div class="row" id="graphs-info">
-                    <div id="playlists-info" style="text-align: center">
-                        <h2>Playlists</h2>
-                    </div>
+            <div class="row" id="graphs-info">
+                <div id="playlists-info" style="text-align: center">
+                    <h2>Playlists</h2>
                 </div>
+            </div>
 
-                <div class="row">
-                    <div id="list-playlists">
-                        <div class="row" id="playlists">
-                        </div>
+            <div class="row">
+                <div id="list-playlists">
+                    <div class="row" id="playlists">
                     </div>
                 </div>
+            </div>
         </section>
 
         <section class="container-fluid playlists-wrapper">
-                <div class="row" style="position: relative; height: 600px">
-                    <div id="playlists-info" class="col-sm-6 col-sm-offset-3">
-                        <h2>Style</h2>
-                    </div>
-
-                    <div id="treemap-styles" style="left: 5%; top:15%; text-align: center; width: 90%;position: absolute; bottom: 10px;"></div>
+            <div class="row" style="position: relative; height: 600px">
+                <div id="playlists-info" class="col-sm-6 col-sm-offset-3">
+                    <h2>Your Style</h2>
                 </div>
+
+                <div id="treemap-styles" style="left: 5%; top:15%; text-align: center; width: 90%;position: absolute; bottom: 30px;"></div>
+
+                <script type="text/javascript">
+                    mount_style_graph({{ user_id }});
+                </script>
+            </div>
+        </section>
+
+        <section class="container-fluid playlists-wrapper">
+            <div class="row" style="position: relative; height: 600px">
+                <div id="playlists-info" class="col-sm-10 col-sm-offset-1">
+                    <h2>Most popular artists in your playlists</h2>
+                </div>
+
+                <div id="top-artists" style="left: 5%; top:15%; text-align: center; width: 90%;position: absolute; bottom: 30px;"></div>
+
+                <script type="text/javascript">
+                    mount_top_artists_graph({{ user_id }});
+                </script>
+            </div>
         </section>
 
 	</div>
