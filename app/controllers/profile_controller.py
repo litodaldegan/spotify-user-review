@@ -3,6 +3,7 @@ from flask import (
 )
 import requests ,string, collections
 from sqlalchemy.sql import func
+from sqlalchemy import desc
 from app.models.user import User
 from app.models.playlist import PlayList
 from app.models.artist import Artist
@@ -152,16 +153,21 @@ def request_artists(user_id, access_token, artists_ids):
 			db.session.commit()
 
 
-def user_pontuation(user_id):
+def user_score(user_id):
 	artists = db.session.query(Artist).filter_by(user=user_id).all()
-	pontuation = 0
+	user = db.session.query(User).get(user_id)
+	score = 0
 
 	for artist in artists:
-		pontuation += artist.popularity
+		score += artist.popularity
 
-	pontuation /= len(artists)
+	score /= len(artists)
 
-	return pontuation
+	user.score = score;
+	db.session.add(user)
+	db.session.commit()
+
+	return score
 
 @blueprint.route('/playlists/<user_id>')
 def get_playlists(user_id):
@@ -190,6 +196,13 @@ def get_styles(user_id):
 	return jsonify(json_data=json_data), 200
 
 
+@blueprint.route('/artists/top10/<user_id>')
+def get_top10(user_id):
+	artists = [dict(i) for i in db.session.query(Artist).filter_by(user=user_id).order_by(desc("popularity")).limit(10).all()]
+
+	return jsonify(json_data=artists), 200
+
+
 @blueprint.route('/<user>/<token>')
 def user_profile(user, token):
 	user_data = json.loads(user)
@@ -202,9 +215,13 @@ def user_profile(user, token):
 
 	# request_artists (user_id, token, artists_ids)
 
-	pontuation = user_pontuation(user_id)
+	score = user_score(user_id)
 
-	return render_template('profile/index.html', user=user_data, pontuation=pontuation)
+	import pdb; pdb.set_trace()
+
+	get_top10(user_id)
+
+	return render_template('profile/index.html', user=user_data, score=score, user_id=user_id)
 
 
 @blueprint.route('/charts')

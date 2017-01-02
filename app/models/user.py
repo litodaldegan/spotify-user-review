@@ -13,6 +13,7 @@ class User(db.Model):
 	country = Column(String)
 	followers = Column(Integer)
 	product = Column(String)
+	score = Column(Integer)
 
 	def __iter__(self):
 		yield 'spotify_id', self.spotify_id
@@ -22,3 +23,4 @@ class User(db.Model):
 		yield 'country', self.country
 		yield 'followers', self.followers
 		yield 'product', self.product
+		yield 'score', self.score
