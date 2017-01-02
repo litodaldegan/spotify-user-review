@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+	<link rel="stylesheet" type="text/css" href="static/css/home.css" type="text/css">
+	
+	<div class="top-content" id="initBoard">
+        <div class="inner-bg">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xs-offset-4 text">
+                        <h1><strong>Spotify user review</strong></h1>
+                        <div class="description">
+                            <p>
+                            	You want to know more about your Spotify usage pattern? check it out!
+                            </p>
+                        </div>
+                    </div>
+                </div>
+				<div class="row">
+			        <div class="col-xs-offset-4 form-box">
+			            <div class="form-top">
+							<div class="form-bottom">
+					            <a id="login" href="/login" class="btn btn-success">Login with Spotify</a>
+					            <a id="about" href="/about" class="btn btn-default">About</a>
+					        </div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+{% endblock content %}

@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container" style="min-height:100% width:80%">
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-warning alert-dismissible" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+        {{message}}
+      </div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
+<link type="text/css" rel="stylesheet" media="all" href="/static/css/profile.css" />
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+
+<script type="text/javascript" src="/static/js/playlists_painel.js"></script>
+<script type="text/javascript" src="/static/js/user_style.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3plus/1.9.8/d3plus.full.min.js"></script>
+
+
+<div class="container">
+	<div class="row">
+		<div>
+
+            <div class="card hovercard">
+                <div class="cardheader">
+
+                </div>
+                <div class="avatar" id="avatar" style="cursor: pointer">
+                    <img alt="" src="https://at-cdn-s01.audiotool.com/2016/04/15/users/raper/avatar256x256-42ed4adfa1f447d28310b3ec294428f3.jpg">
+                </div>
+                <div class="info" id="display_info" style="height: 60px;">
+                    <div class="title">
+                        <a target="_blank" href=""> {{ user.display_name if none else user.id }} </a>
+                    </div>
+                    <div class="desc">Email: {{ user.email }}</div>
+                    <div class="desc">Country: {{ user.country }}</div>
+                    <div class="desc">Followers: {{ user.followers }}</div>
+                    <div class="desc">Type: {{ user.type }}</div>
+                    <div class="desc">Pontuação: {{ pontuation }}</div>
+                </div>
+            </div>
+
+        </div>
+
+        <section class="container-fluid playlists-wrapper">
+                <div class="row" id="graphs-info">
+                    <div id="playlists-info" style="text-align: center">
+                        <h2>Playlists</h2>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div id="list-playlists">
+                        <div class="row" id="playlists">
+                        </div>
+                    </div>
+                </div>
+        </section>
+
+        <section class="container-fluid playlists-wrapper">
+                <div class="row" style="position: relative; height: 600px">
+                    <div id="playlists-info" class="col-sm-6 col-sm-offset-3">
+                        <h2>Style</h2>
+                    </div>
+
+                    <div id="treemap-styles" style="left: 5%; top:15%; text-align: center; width: 90%;position: absolute; bottom: 10px;"></div>
+                </div>
+        </section>
+
+	</div>
+</div>
+
+{% endblock content %}
