@@ -217,8 +217,6 @@ def user_profile(user, token):
 
 	score = user_score(user_id)
 
-	import pdb; pdb.set_trace()
-
 	get_top10(user_id)
 
 	return render_template('profile/index.html', user=user_data, score=score, user_id=user_id)
